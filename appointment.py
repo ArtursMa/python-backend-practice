@@ -7,11 +7,16 @@ class Client:
     phone: str
     is_active: bool = True
 
+    def __post_init__(self):
+        stripped_name = self.name.strip()
+        if not stripped_name:
+            raise ValueError("Please write client name")
+        self.name = stripped_name
 
-first_client = Client("Anna", "+327832223", True)
-print(f"My first client name is {first_client.name}, her phone number is {first_client.phone}")
-print(first_client)
-second_client = Client("Veronika", "+32323232", False)
-print(second_client)
-third_client = Client("zina", "+3203322323232")
-print(third_client)
+
+try:
+    Client(" ", "+317372893823")
+
+except ValueError as ex:
+    print(ex)
+print(Client(" Anna ", "+22323822"))
