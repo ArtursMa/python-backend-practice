@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class Client:
     name: str
     phone: str
-    is_active: bool
+    is_active: bool = True
 
 
 first_client = Client("Anna", "+327832223", True)
@@ -13,3 +13,5 @@ print(f"My first client name is {first_client.name}, her phone number is {first_
 print(first_client)
 second_client = Client("Veronika", "+32323232", False)
 print(second_client)
+third_client = Client("zina", "+3203322323232")
+print(third_client)
