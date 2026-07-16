@@ -8,6 +8,8 @@ class Client:
     is_active: bool = True
 
     def __post_init__(self):
+        if not isinstance(self.name, str):
+            raise TypeError("Name should be string")
         stripped_name = self.name.strip()
         if not stripped_name:
             raise ValueError("Please write client name")
@@ -18,7 +20,6 @@ class Client:
         if not stripped_phone:
             raise ValueError("Please write a number")
         self.phone = stripped_phone
-
 
 
 try:
@@ -34,4 +35,8 @@ except TypeError as ex:
 try:
     Client("sds", " ")
 except ValueError as ex:
+    print(ex)
+try:
+    Client(111, "+328828")
+except TypeError as ex:
     print(ex)
