@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import ClassVar
 
 
 @dataclass
@@ -6,10 +7,9 @@ class Client:
     name: str
     phone: str
     is_active: bool = True
+    all_clients_count: ClassVar[int] = 0
 
     def __post_init__(self):
-        if not isinstance(self.is_active, bool):
-            raise TypeError("is_active should be bool")
         if not isinstance(self.name, str):
             raise TypeError("Name should be string")
         stripped_name = self.name.strip()
@@ -22,6 +22,9 @@ class Client:
         if not stripped_phone:
             raise ValueError("Please write a number")
         self.phone = stripped_phone
+        if not isinstance(self.is_active, bool):
+            raise TypeError("is_active should be bool")
+        Client.all_clients_count += 1
 
 
 print(Client("Anna", "+32212121", False))
