@@ -26,9 +26,20 @@ class Client:
             raise TypeError("is_active should be bool")
         Client.all_clients_count += 1
 
+    def activate(self):
+        if not self.is_active:
+            self.is_active = True
+
+    def deactivate(self):
+        if self.is_active:
+            self.is_active = False
+
 
 print(Client("Anna", "+32212121", False))
 try:
     Client("Zina", "+2323232", "active")
 except TypeError as ex:
     print(ex)
+
+print(Client.all_clients_count)
+
