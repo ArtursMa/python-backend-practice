@@ -34,12 +34,36 @@ class Client:
         if self.is_active:
             self.is_active = False
 
+    def rename(self, new_name):
+        if not isinstance(new_name, str):
+            raise TypeError("Name should be string")
+        stripped_name = new_name.strip()
+        if not stripped_name:
+            raise ValueError("Empty name provided")
+        self.name = stripped_name
 
-print(Client("Anna", "+32212121", False))
+    def change_phone(self, new_phone):
+        if not isinstance(new_phone, str):
+            raise TypeError("phone should be string")
+        stripped_phone = new_phone.strip()
+        if not stripped_phone:
+            raise ValueError("Empty phone provided")
+        self.phone = stripped_phone
+
+
+client_one = Client("Anna", "+32323211")
+client_one.change_phone("3333333")
+client_one.rename("Oleg")
+print(client_one.phone)
+print(client_one.name)
+client_one.rename(" Anna  ")
+client_one.change_phone(" +33434 ")
+print(f"{client_one.name} is name and phone is {client_one.phone}")
 try:
-    Client("Zina", "+2323232", "active")
+    client_one.change_phone("   ")
+except ValueError as ex:
+    print(ex)
+try:
+    client_one.rename(2222)
 except TypeError as ex:
     print(ex)
-
-print(Client.all_clients_count)
-
