@@ -50,6 +50,10 @@ class Client:
             raise ValueError("Empty phone provided")
         self.phone = stripped_phone
 
+    def get_info(self):
+        client_status = "is active" if self.is_active else "is not active"
+        return f"Client name is {self.name}, client phone number is {self.phone}, client {client_status}"
+
 
 client_one = Client("Anna", "+32323211")
 client_one.change_phone("3333333")
@@ -67,3 +71,6 @@ try:
     client_one.rename(2222)
 except TypeError as ex:
     print(ex)
+print(client_one.get_info())
+client_one.deactivate()
+print(client_one.get_info())
