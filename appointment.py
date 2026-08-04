@@ -3,6 +3,13 @@ from datetime import datetime
 from client import Client
 
 
+def get_minutes(start_time, end_time):
+    duration = end_time - start_time
+    duration_in_seconds = duration.total_seconds()
+    duration_in_minutes = int(duration_in_seconds / 60)
+    return duration_in_minutes
+
+
 @dataclass
 class Appointment:
     client: Client
@@ -42,6 +49,22 @@ class Appointment:
         if self.actual_start and self.actual_end:
             if self.actual_end <= self.actual_start:
                 raise ValueError("Time of appointment should be more than zero")
+
+    def get_estimated_minutes(self) -> int:
+        duration_in_minutes = get_minutes(self.scheduled_start,self.estimated_end)
+        return duration_in_minutes
+
+    def get_actual_minutes(self) -> int | None:
+        if self.actual_start is None or self.actual_end is None:
+            return None
+        return get_minutes(self.actual_start,self.actual_end)
+
+
+
+
+
+
+
 
 
 
