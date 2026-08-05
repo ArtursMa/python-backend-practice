@@ -1,21 +1,28 @@
 from datetime import datetime
-
+import pytest
 from appointment import Appointment
 from client import Client
-import pytest
+
+
+def make_appointment(**changes):
+    client = Client("TestClient", "TestNumber")
+    data = {
+        "client": client,
+        "is_confirmed": True,
+        "service_name": "Electrolysis",
+        "price_in_cents_per_hour": 2200,
+        "scheduled_start": datetime(2026, 8, 5, 14, 0),
+        "estimated_end": datetime(2026, 8, 5, 15, 30),
+        "actual_start": None,
+        "actual_end": None
+
+    }
+    data.update(changes)
+    return Appointment(**data)
 
 
 def test_get_estimated_minutes():
-    client = Client("Anna", "+328232232")
-
-    appointment = Appointment(
-        client=client,
-        is_confirmed=True,
-        service_name="Electrolysis",
-        price_in_cents_per_hour=2200,
-        scheduled_start=datetime(2026, 8, 5, 14, 0),
-        estimated_end=datetime(2026, 8, 5, 15, 30),
-    )
+    appointment = make_appointment()
 
     result = appointment.get_estimated_minutes()
 
@@ -23,56 +30,16 @@ def test_get_estimated_minutes():
 
 
 def test_get_actual_minutes():
-    client = Client("Zina", "+324232322")
-    appointment = Appointment(
-        client=client,
-        is_confirmed=True,
-        service_name="Electrolysis",
-        price_in_cents_per_hour=2200,
-        scheduled_start=datetime(2026, 8, 5, 14, 10),
-        estimated_end=datetime(2026, 8, 5, 15, 25),
-        actual_start=datetime(2026, 8, 5, 14, 10),
-        actual_end=datetime(2026, 8, 5, 15, 25),
-    )
-
-    result = appointment.get_actual_minutes()
-
+    result = make_appointment(actual_start=datetime(2026, 8, 5, 14, 00),
+                              actual_end=datetime(2026, 8, 5, 15, 15)
+                              ).get_actual_minutes()
     assert result == 75
 
 
 def test_get_minutes_with_missing_data():
-    client_two = Client("Nina", "2321111")
-    appointment = Appointment(
-        client=client_two,
-        is_confirmed=True,
-        service_name="Electrolysis",
-        price_in_cents_per_hour=6000,
-        scheduled_start=datetime(2026, 8, 5, 14, 0),
-        estimated_end=datetime(2026, 8, 5, 15, 30),
-        actual_start=None,
-        actual_end=None
-    )
-
-    appointment_two = Appointment(
-        client=client_two,
-        is_confirmed=True,
-        service_name="Electrolysis",
-        price_in_cents_per_hour=6000,
-        scheduled_start=datetime(2026, 8, 5, 14, 0),
-        estimated_end=datetime(2026, 8, 5, 15, 30),
-        actual_start=datetime(2026, 8, 5, 15, 30),
-        actual_end=None
-    )
-    appointment_three = Appointment(
-        client=client_two,
-        is_confirmed=True,
-        service_name="Electrolysis",
-        price_in_cents_per_hour=6000,
-        scheduled_start=datetime(2026, 8, 5, 14, 0),
-        estimated_end=datetime(2026, 8, 5, 15, 30),
-        actual_start=None,
-        actual_end=datetime(2026, 8, 5, 15, 30)
-    )
+    appointment = make_appointment()
+    appointment_two = make_appointment(actual_start=datetime(2026, 8, 5, 15, 30))
+    appointment_three = make_appointment(actual_end=datetime(2026, 8, 5, 15, 30))
 
     result_with_no_actual_start_and_end = appointment.get_actual_minutes()
     result_with_no_actual_end = appointment_two.get_actual_minutes()
@@ -83,49 +50,15 @@ def test_get_minutes_with_missing_data():
 
 
 def test_appointment_with_negative_price_number():
-    client = Client("Nina", "2321111")
-
     with pytest.raises(ValueError):
-        appointment = Appointment(
-            client=client,
-            is_confirmed=True,
-            service_name="Electrolysis",
-            price_in_cents_per_hour=-2,
-            scheduled_start=datetime(2026, 8, 5, 14, 10),
-            estimated_end=datetime(2026, 8, 5, 15, 25),
-            actual_start=datetime(2026, 8, 5, 14, 10),
-            actual_end=datetime(2026, 8, 5, 15, 25),
-        )
+        make_appointment(price_in_cents_per_hour=-2)
 
 
 def test_appointment_with_zero_price_number():
-    client = Client("Velariha", "+32323232")
     with pytest.raises(ValueError):
-        Appointment(
-            client=client,
-            is_confirmed=True,
-            service_name="Electrolysis",
-            price_in_cents_per_hour=0,
-            scheduled_start=datetime(2026, 8, 5, 14, 10),
-            estimated_end=datetime(2026, 8, 5, 15, 25),
-            actual_start=datetime(2026, 8, 5, 14, 10),
-            actual_end=datetime(2026, 8, 5, 15, 25),
-
-        )
+        make_appointment(price_in_cents_per_hour=0)
 
 
-def test_appoitnmetn_reject_price_in_string():
-    client = Client("Nadaja", "+323232")
+def test_appointment_reject_price_in_string():
     with pytest.raises(TypeError):
-        Appointment(
-            client=client,
-            is_confirmed=True,
-            service_name="Electrolysis",
-            price_in_cents_per_hour="4000",
-            scheduled_start=datetime(2026, 8, 5, 14, 10),
-            estimated_end=datetime(2026, 8, 5, 15, 25),
-            actual_start=datetime(2026, 8, 5, 14, 10),
-            actual_end=datetime(2026, 8, 5, 15, 25),
-
-        )
-
+        make_appointment(price_in_cents_per_hour="6000")
