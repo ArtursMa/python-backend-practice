@@ -58,18 +58,9 @@ class Client:
 client_one = Client("Anna", "+32323211")
 client_one.change_phone("3333333")
 client_one.rename("Oleg")
-print(client_one.phone)
-print(client_one.name)
+
+
 client_one.rename(" Anna  ")
 client_one.change_phone(" +33434 ")
-print(f"{client_one.name} is name and phone is {client_one.phone}")
-try:
-    client_one.change_phone("   ")
-except ValueError as ex:
-    print(ex)
-try:
-    client_one.rename(2222)
-except TypeError as ex:
-    print(ex)
-print(client_one.get_info())
-client_one.deactivate()
+
+
