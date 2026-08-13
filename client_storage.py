@@ -20,18 +20,13 @@ def load_clients(file_name: str) -> list[Client]:
 
 
 def save_clients(clients: list[Client], file_name: str) -> None:
-
     data_list = [asdict(client) for client in clients]
     with open(file_name, "w") as file:
         json.dump(data_list, file)
 
 
-
-
-
 def add_client(client: Client, file_name: str) -> None:
-    pass
+    list_of_clients = load_clients(file_name)
+    list_of_clients.append(client)
+    save_clients(list_of_clients, file_name)
 
-
-# my_clients = load_clients("clients.json")
-# print(my_clients)

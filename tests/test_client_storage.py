@@ -58,3 +58,22 @@ def test_save_empty_list(tmp_path):
         data_from_empty_json = json.load(file)
     assert data_from_empty_json == []
 
+
+def test_add_client_to_existing_file(tmp_path):
+    file_path = tmp_path / "clients.json"
+
+    first_client = Client("Vete","232323",True)
+    new_client = Client("zene","323232",True)
+    client_storage.save_clients([first_client],file_path)
+    client_storage.add_client(new_client,file_path)
+    updated_client_list = client_storage.load_clients(file_path)
+    assert updated_client_list == [first_client,new_client]
+
+
+    # сначала сохрани first_client
+
+    # затем add_client(new_client, ...)
+
+    # загрузи результат
+
+    # assert ...
