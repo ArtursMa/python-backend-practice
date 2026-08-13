@@ -35,8 +35,26 @@ def test_load_clients_failed_no_file():
 
 
 def test_load_clients_from_wrong_json_file(tmp_path):
-    file_path = tmp_path/"client_storage_wrong.json"
+    file_path = tmp_path / "client_storage_wrong.json"
     with open(file_path, "w") as file:
         file.write("{,,}")
     result = client_storage.load_clients(file_path)
     assert result == []
+
+
+def test_save_clients_to_valid_file(tmp_path):
+    file_path = tmp_path / "valid_file.json"
+    client_test_list = [Client(**clients) for clients in test_data]
+    client_storage.save_clients(client_test_list, file_path)
+    with open(file_path, "r") as file:
+        data_from_test_file = json.load(file)
+
+    assert data_from_test_file == test_data
+
+def test_save_empty_list(tmp_path):
+    file_path = tmp_path/"empty_json.json"
+    client_storage.save_clients([],file_path)
+    with open(file_path,"r") as file:
+        data_from_empty_json = json.load(file)
+    assert data_from_empty_json == []
+

@@ -1,6 +1,6 @@
 import json
-
 from client import Client
+from dataclasses import asdict
 
 
 def load_clients(file_name: str) -> list[Client]:
@@ -20,7 +20,13 @@ def load_clients(file_name: str) -> list[Client]:
 
 
 def save_clients(clients: list[Client], file_name: str) -> None:
-    pass
+
+    data_list = [asdict(client) for client in clients]
+    with open(file_name, "w") as file:
+        json.dump(data_list, file)
+
+
+
 
 
 def add_client(client: Client, file_name: str) -> None:
