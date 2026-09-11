@@ -22,10 +22,20 @@ def get_client_by_id(client_id):
 
 
 def add_client(name, phone, status):
+
     connection = get_connection()
     with connection:
-        connection.execute("INSERT INTO clients(name,phone,status) VALUES(?,?,?)", (name, phone, status))
+        beauty_db_cursor = connection.execute("INSERT INTO clients(name,phone,status) VALUES(?,?,?)", (name, phone, status))
+        last_row_id = beauty_db_cursor.lastrowid
+
     connection.close()
+    return last_row_id
 
 
-add_client("Kate", "34343", 1)
+
+
+
+
+
+
+
