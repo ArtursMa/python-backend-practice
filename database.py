@@ -40,11 +40,17 @@ def update_client(updated_id, name, phone, status):
                                               (name, phone, status, updated_id))
         if beauty_db_cursor.rowcount:
             is_updated = True
-        
 
     connection.close()
     return is_updated
 
 
-print(update_client(0, "Elene", "555", 0))
+def delete_client_by_id(client_id):
+    beauty_db_connection = get_connection()
+    with beauty_db_connection:
+        beauty_db_cursor = beauty_db_connection.execute("DELETE FROM clients WHERE id = ?", (client_id,))
+    beauty_db_connection.close()
+    return beauty_db_cursor.rowcount > 0
+
+
 
